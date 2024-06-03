@@ -20,9 +20,15 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
     private QuoridorTextField TextFieldObjects;
 
     private JButton[][] quoridorButtons;
+
     private boolean continuGame = true; // 게임 판에서 양 쪽 판 위 버튼을 확인하여 반대편 시작 아이콘이 존재하면 종료
+
     private int[][] currentPlayerCoordinate = new int[2][2]; // 0번에 백색말 (row,col), 1번에 흑색말 (row,col)
+
     private int turn = 0; // 0은 백색 턴, 1은 흑색 턴이다
+
+    private boolean gameEnd = false;
+
     private String[][] barLocation = new String[17][17]; // bar가 설치되어 있으면 "bar", 없으면 ""
 
     // Constuctor
@@ -294,7 +300,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
 
         // 막대를 설치하는 메서드 (Event Handler)
         // BarInstallLogic으로 스레드가 가는 영역(BarInstallLogic으로 갔다가 BarDirectionSlectWindow로 이동)
-        if (row % 2 == 1 && col % 2 == 1 && (quoridorButtons[row][col].getIcon() == ButtonPanelObject.getBarCanPutImg())) {
+        if (row % 2 == 1 && col % 2 == 1 && !gameEnd && (quoridorButtons[row][col].getIcon() == ButtonPanelObject.getBarCanPutImg())) {
             // bar설치
             barInstallLogic.installBar(turn, row, col, this);
         }
@@ -336,16 +342,19 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
 
 
             //현재 턴 말이 이동할 수 있는 mark 표시
-            canMoveMark();
+            if(gameEnd == false)
+                canMoveMark();
         }
     }
     public void victoryCheck() {
         for (int i = 0; i < quoridorButtons[0].length; i += 2) {
             if(quoridorButtons[0][i].getIcon() == ButtonPanelObject.getPlayer1LocationImg()) {
                 VictoryWindow victoryWindow = new VictoryWindow(TextFieldObjects.getPlayerNames(), turn);
+                gameEnd = true;
                 break;
             } else if(quoridorButtons [16][i].getIcon() == ButtonPanelObject.getPlayer2LocationImg()) {
                 VictoryWindow victoryWindow = new VictoryWindow(TextFieldObjects.getPlayerNames(), turn);
+                gameEnd = true;
                 break;
             }
         }

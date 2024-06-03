@@ -20,6 +20,6 @@ public class VictoryWindow extends JFrame {
         add(victoryText);
         setBounds(225,250,300,200);
         setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 }

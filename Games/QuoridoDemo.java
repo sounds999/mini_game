@@ -40,8 +40,4 @@ public class QuoridoDemo extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
-
-//    public static void main(String[] args) {
-//        QuoridoDemo Quoridor = new QuoridoDemo();
-//    }
 }
