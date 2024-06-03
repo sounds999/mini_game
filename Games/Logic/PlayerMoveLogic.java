@@ -29,7 +29,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
 
     private boolean gameEnd = false;
 
-    private String[][] barLocation = new String[17][17]; // bar가 설치되어 있으면 "bar", 없으면 ""
+    private String[][] barLocation = new String[18][18]; // bar가 설치되어 있으면 "bar", 없으면 ""
 
     // Constuctor
     // QuoridorDemo에서 quoridorButtonPanel을 받아옴 (Icon 및 Button을 사용하기 위해서) (Icon 클래스를 따로 만드는 것도 괜찮을 듯 함)

@@ -15,7 +15,7 @@ public class BarInstallLogic extends JFrame {
     private JButton[] checkCancelButtons; // 0번에 "확인" 버튼, 1번에 "취소" 버튼
     private int checkCancel; // 값이 0이면 "확인", 1이면 "취소"
 
-    private int[] barNumber = {10, 10}; // 0번에 백색돌 막대 수, 1번에 흑색 돌 막대 수
+    private int[] barNumber = {10, 10}; // 0번에 백색돌 막대 수, 1번에 흑색 돌 막대 수 <- 다시 만든다면 백과 흑 따로 만들었을 듯 하다
     private String[][] barLocation; // bar가 설치되어 있으면 "bar", 없으면 ""
 
     // 사용 객체들
@@ -34,7 +34,7 @@ public class BarInstallLogic extends JFrame {
         this.barLocation = barLocation;
     }
 
-    // 막대 설치 버튼 누른 좌표
+    // 실시간 막대 설치 버튼 누른 좌표
     private int[] barInstallButtonCoordinate = new int[2];
 
     // 막대 설치 로직
@@ -73,13 +73,14 @@ public class BarInstallLogic extends JFrame {
 
     // bar을 설치
     public void barInstallLogic(int turn, BarDirectionSelectWindow barDirectionSelectWindow, PlayerMoveLogic playerMoveLogicObject) {
-        if (checkCancel == 1) { // 취소
+        if (checkCancel == 1) { // 취소버튼 누름
             barDirectionSelectWindow.closeWindow(); // 창 종료
-        } else if (checkCancel == 0) { //  확인
+        } else if (checkCancel == 0) { //  확인버튼 누름
             // 막대 갯수 확인
             for (int i = 0; i < 2; i++) {
                 if ((turn == i) && (barNumber[i] > 0)) {
 
+                    // TODO 만약 해당 bar가 유저의 경로를 차단하지 않는 경우에 if문이 true가 되어서 barinstall이 실행되게 하는 로직 구현
                     barinstall(turn, barDirectionSelectWindow, playerMoveLogicObject);
 
                 } else if ((turn == i) && (barNumber[i] <= 0)) {
@@ -128,7 +129,6 @@ public class BarInstallLogic extends JFrame {
             quoridorButtons[row + 1][col].setIcon(ButtonPanelObject.getInstalledVerticalBarImg());
             quoridorButtons[row][col].setIcon(ButtonPanelObject.getInstalledCentalBarImg());
             quoridorButtons[row - 1][col].setIcon(ButtonPanelObject.getInstalledVerticalBarImg());
-
             for (int i = 0; i < 3; i++) barLocation[row + 1 - i][col] = "bar"; // 막대 위치 삽입
 
             if (turn == 0) {

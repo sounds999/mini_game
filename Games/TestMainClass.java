@@ -113,7 +113,7 @@ public class TestMainClass extends JPanel implements TestInterface{
 				OmokDemo omokTest = new OmokDemo(player);
 			}
 			else if (othelloSelect == 1) {
-				player[0] = name1TextField.getText();
+				player[0] = name1TextField.getText( );
 				player[1] = name2TextField.getText();
 				OthelloDemo othelloTest = new OthelloDemo(player);
 			}

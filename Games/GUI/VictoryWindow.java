@@ -14,11 +14,13 @@ public class VictoryWindow extends JFrame {
             currnetPlayer = playersNames[0];
 
         JTextArea victoryText = new JTextArea();
-        victoryText.setText(currnetPlayer + "님이 승리하셨습니다");
+        victoryText.setRows(3);
+        victoryText.setLineWrap(true);
+        victoryText.setText("★★★★★★★★★★★★★★★★★★★★★★★★★★★★" + currnetPlayer + "님이 승리하셨습니다   ★★★★★★★★★★★★★★★★★★★★★★★★★★★★");
         victoryText.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 
         add(victoryText);
-        setBounds(225,250,300,200);
+        setBounds(225,250,300,180);
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
