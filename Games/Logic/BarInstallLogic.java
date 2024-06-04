@@ -96,13 +96,17 @@ public class BarInstallLogic extends JFrame {
         int row = barInstallButtonCoordinate[0];
         int col = barInstallButtonCoordinate[1];
 
+        // barLocation이 quridorButtons보다 테두리 배열이 한 줄 더 있는 것 감안
+        int StringRow = barInstallButtonCoordinate[0] + 1;
+        int StringCol = barInstallButtonCoordinate[1] + 1;
+
         // 막대 가로 방향 선택
         if ((dircetion == 0) &&
-                barLocation[row][col - 1].equals("") && barLocation[row][col + 1].equals("")) {
+                barLocation[StringRow][StringCol - 1].equals("") && barLocation[StringRow][StringCol + 1].equals("")) {
             quoridorButtons[row][col - 1].setIcon(ButtonPanelObject.getInstalledHorizontalBarImg());
             quoridorButtons[row][col].setIcon(ButtonPanelObject.getInstalledCentalBarImg());
             quoridorButtons[row][col + 1].setIcon(ButtonPanelObject.getInstalledHorizontalBarImg());
-            for (int i = 0; i < 3; i++) barLocation[row][col + 1 - i] = "bar"; // 막대 위치 삽입
+            for (int i = 0; i < 3; i++) barLocation[StringRow][StringCol + 1 - i] = "bar"; // 막대 위치 삽입
 
             // 막대 숫자 감소
             if (turn == 0) {
@@ -119,17 +123,17 @@ public class BarInstallLogic extends JFrame {
 
             // 가로 막대 설치 영역에 이미 막대가 있는 경우
         } else if ((dircetion == 0) &&
-                !(barLocation[row][col - 1].equals("")) || !(barLocation[row][col + 1].equals(""))) {
+                !(barLocation[StringRow][StringCol - 1].equals("")) || !(barLocation[StringRow][StringCol + 1].equals(""))) {
             barDirectionSelectWindow.getWarning().setText("이미 막대가 설치된 구역입니다");
         }
 
         // 막대 세로 방향 선택
         if ((dircetion == 1) &&
-                barLocation[row - 1][col].equals("") && barLocation[row + 1][col].equals("")) {
+                barLocation[StringRow - 1][StringCol].equals("") && barLocation[StringRow + 1][StringCol].equals("")) {
             quoridorButtons[row + 1][col].setIcon(ButtonPanelObject.getInstalledVerticalBarImg());
             quoridorButtons[row][col].setIcon(ButtonPanelObject.getInstalledCentalBarImg());
             quoridorButtons[row - 1][col].setIcon(ButtonPanelObject.getInstalledVerticalBarImg());
-            for (int i = 0; i < 3; i++) barLocation[row + 1 - i][col] = "bar"; // 막대 위치 삽입
+            for (int i = 0; i < 3; i++) barLocation[StringRow + 1 - i][StringCol] = "bar"; // 막대 위치 삽입
 
             if (turn == 0) {
                 barNumber[0]--;
@@ -146,7 +150,7 @@ public class BarInstallLogic extends JFrame {
 
             // 가로 막대 설치 영역에 이미 막대가 있는 경우
         } else if ((dircetion == 1) &&
-                !(barLocation[row - 1][col].equals("")) || !(barLocation[row + 1][col].equals(""))) {
+                !(barLocation[StringRow - 1][StringCol].equals("")) || !(barLocation[StringRow + 1][StringCol].equals(""))) {
             barDirectionSelectWindow.getWarning().setText("이미 막대가 설치된 구역입니다");
         }
     }

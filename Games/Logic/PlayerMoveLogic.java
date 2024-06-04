@@ -46,12 +46,12 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
         }
 
         // 벽면 bar 주입
-        /*for(int i = 0; i < barLocation.length; i++) {
+        for(int i = 0; i < barLocation.length; i++) {
             barLocation[i][0] = "bar";
             barLocation[i][18] = "bar";
             barLocation[0][i] = "bar";
             barLocation[18][i] = "bar";
-        }*/
+        }
 
 
         // 버튼에 EventListener 주입 및 초기 설정
@@ -164,7 +164,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
 
         // row , col 범위 조건, 해당 방향으로 막대가 설치되어 있는지 검사, 앞에 상대 말이 있거나 비어있으면 thread 통과
         if ((oneJumpMarkRow >= 0 && oneJumpMarkRow <= 16) && (oneJumpMarkCol >= 0 && oneJumpMarkCol <= 16)
-                && !(barInstallCheck(oneJumpBarRow, oneJumpBarCol))
+                && !(barInstallCheck(oneJumpBarRow + 1, oneJumpBarCol + 1)) // barLocation과 quoridorButton의 배열이 다른거 조정
                 && ((quoridorButtons[oneJumpMarkRow][oneJumpMarkCol].getIcon() == ButtonPanelObject.getUserMoveImg())
                 || (quoridorButtons[oneJumpMarkRow][oneJumpMarkCol].getIcon() == competitorIcon)))
         {
@@ -175,7 +175,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
             }
             // row, col 범위 조건, 상대말 뒤로 막대가 존재하는지 검사, 해당 방향에 상대편 말이 있는지 검사
             else if ((twoJumpMarkRow >= 0 && twoJumpMarkRow <= 16) && (twoJumpMarkCol >= 0 && twoJumpMarkCol <= 16)
-                    && !(barInstallCheck(towJumpBarRow, twoJumpBarCol))
+                    && !(barInstallCheck(towJumpBarRow + 1, twoJumpBarCol + 1))
                     && (quoridorButtons[oneJumpMarkRow][oneJumpMarkCol].getIcon() == competitorIcon))
             {
                 quoridorButtons[twoJumpMarkRow][twoJumpMarkCol].setIcon(ButtonPanelObject.getUserCanMoveImg());
