@@ -23,7 +23,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
 
     private boolean continuGame = true; // 게임 판에서 양 쪽 판 위 버튼을 확인하여 반대편 시작 아이콘이 존재하면 종료
 
-    private int[][] currentPlayerCoordinate = new int[2][2]; // 0번에 백색말 (row,col), 1번에 흑색말 (row,col)
+    public int[][] currentPlayerCoordinate = new int[2][2]; // 0번에 백색말 (row,col), 1번에 흑색말 (row,col)
 
     private int turn = 0; // 0은 백색 턴, 1은 흑색 턴이다
 
@@ -46,7 +46,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
         }
 
         // 벽면 bar 주입
-        for(int i = 0; i < barLocation.length; i++) {
+        for (int i = 0; i < barLocation.length; i++) {
             barLocation[i][0] = "bar";
             barLocation[i][18] = "bar";
             barLocation[0][i] = "bar";
@@ -58,7 +58,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
         insertEventListenerToButton();
 
         // 초기 설정 끝나고 막대 로직 객체를 생성해 주어야 함
-        barInstallLogic = new BarInstallLogic(ButtonPanelObject, quoridorButtons, TextFieldObjects, barLocation);
+        barInstallLogic = new BarInstallLogic(ButtonPanelObject, quoridorButtons, TextFieldObjects, barLocation, currentPlayerCoordinate);
 
         // 현재 turn의 버튼 주위로 이동할 수 있는 Icon 띄우는 메서드
         canMoveMark();
@@ -130,8 +130,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
             towJumpBarRow = row;
             twoJumpBarCol = col - 3;
 
-        }
-        else if (direction.equals("서")) {
+        } else if (direction.equals("서")) {
             oneJumpMarkRow = row;
             oneJumpMarkCol = col + 2;
             twoJumpMarkRow = row;
@@ -140,8 +139,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
             oneJumpBarCol = col + 1;
             towJumpBarRow = row;
             twoJumpBarCol = col + 3;
-        }
-        else if (direction.equals("남")) {
+        } else if (direction.equals("남")) {
             oneJumpMarkRow = row + 2;
             oneJumpMarkCol = col;
             twoJumpMarkRow = row + 4;
@@ -150,8 +148,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
             oneJumpBarCol = col;
             towJumpBarRow = row + 3;
             twoJumpBarCol = col;
-        }
-        else if (direction.equals("북")) {
+        } else if (direction.equals("북")) {
             oneJumpMarkRow = row - 2;
             oneJumpMarkCol = col;
             twoJumpMarkRow = row - 4;
@@ -166,18 +163,15 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
         if ((oneJumpMarkRow >= 0 && oneJumpMarkRow <= 16) && (oneJumpMarkCol >= 0 && oneJumpMarkCol <= 16)
                 && !(barInstallCheck(oneJumpBarRow + 1, oneJumpBarCol + 1)) // barLocation과 quoridorButton의 배열이 다른거 조정
                 && ((quoridorButtons[oneJumpMarkRow][oneJumpMarkCol].getIcon() == ButtonPanelObject.getUserMoveImg())
-                || (quoridorButtons[oneJumpMarkRow][oneJumpMarkCol].getIcon() == competitorIcon)))
-        {
+                || (quoridorButtons[oneJumpMarkRow][oneJumpMarkCol].getIcon() == competitorIcon))) {
             // 해당 방향이 빈 공간인지 검사
-            if ((quoridorButtons[oneJumpMarkRow][oneJumpMarkCol].getIcon() == ButtonPanelObject.getUserMoveImg()))
-            {
+            if ((quoridorButtons[oneJumpMarkRow][oneJumpMarkCol].getIcon() == ButtonPanelObject.getUserMoveImg())) {
                 quoridorButtons[oneJumpMarkRow][oneJumpMarkCol].setIcon(ButtonPanelObject.getUserCanMoveImg());
             }
             // row, col 범위 조건, 상대말 뒤로 막대가 존재하는지 검사, 해당 방향에 상대편 말이 있는지 검사
             else if ((twoJumpMarkRow >= 0 && twoJumpMarkRow <= 16) && (twoJumpMarkCol >= 0 && twoJumpMarkCol <= 16)
                     && !(barInstallCheck(towJumpBarRow + 1, twoJumpBarCol + 1))
-                    && (quoridorButtons[oneJumpMarkRow][oneJumpMarkCol].getIcon() == competitorIcon))
-            {
+                    && (quoridorButtons[oneJumpMarkRow][oneJumpMarkCol].getIcon() == competitorIcon)) {
                 quoridorButtons[twoJumpMarkRow][twoJumpMarkCol].setIcon(ButtonPanelObject.getUserCanMoveImg());
             }
         }
@@ -190,7 +184,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
         return true;
     }
 
-    // TODO 상대편 말을 건너 띄는 상황을 고려하여 4방향의 +-4까지 검사해야 한다 ( 범위 벗어나는거 조건문으로 검사 )
+    // 상대편 말을 건너 띄는 상황을 고려하여 4방향의 +-4까지 검사 ( 범위 벗어나는거 조건문으로 검사 )
     // Event 발생 이전에 보여졌던 이동 가능 지역 mark 제거
     public void removeMark() {
         if (turn == 0) {
@@ -200,34 +194,34 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
 
             // 백색 돌 차례일 때 이동할 수 있는 마크 제거
             if ((row - 2 >= 0 && row - 2 <= 16) && (col >= 0 && col <= 16)) {
-                if(quoridorButtons[row - 2][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                if (quoridorButtons[row - 2][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                     quoridorButtons[row - 2][col].setIcon(ButtonPanelObject.getUserMoveImg());
-                else if(((row - 4 >= 0 && row - 4 <= 16) && (col >= 0 && col <= 16)))
-                    if(quoridorButtons[row - 4][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                else if (((row - 4 >= 0 && row - 4 <= 16) && (col >= 0 && col <= 16)))
+                    if (quoridorButtons[row - 4][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                         quoridorButtons[row - 4][col].setIcon(ButtonPanelObject.getUserMoveImg());
             }
 
             if ((row + 2 >= 0 && row + 2 <= 16) && (col >= 0 && col <= 16)) {
-                if(quoridorButtons[row + 2][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                if (quoridorButtons[row + 2][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                     quoridorButtons[row + 2][col].setIcon(ButtonPanelObject.getUserMoveImg());
-                else if(((row + 4 >= 0 && row + 4 <= 16) && (col >= 0 && col <= 16)))
-                    if(quoridorButtons[row + 4][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                else if (((row + 4 >= 0 && row + 4 <= 16) && (col >= 0 && col <= 16)))
+                    if (quoridorButtons[row + 4][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                         quoridorButtons[row + 4][col].setIcon(ButtonPanelObject.getUserMoveImg());
             }
 
             if ((row >= 0 && row <= 16) && (col - 2 >= 0 && col - 2 <= 16)) {
-                if(quoridorButtons[row][col - 2].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                if (quoridorButtons[row][col - 2].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                     quoridorButtons[row][col - 2].setIcon(ButtonPanelObject.getUserMoveImg());
-                else if(((row>= 0 && row <= 16) && (col - 4 >= 0 && col - 4 <= 16)))
-                    if(quoridorButtons[row][col - 4].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                else if (((row >= 0 && row <= 16) && (col - 4 >= 0 && col - 4 <= 16)))
+                    if (quoridorButtons[row][col - 4].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                         quoridorButtons[row][col - 4].setIcon(ButtonPanelObject.getUserMoveImg());
             }
 
             if ((row >= 0 && row <= 16) && (col + 2 >= 0 && col + 2 <= 16)) {
-                if(quoridorButtons[row][col + 2].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                if (quoridorButtons[row][col + 2].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                     quoridorButtons[row][col + 2].setIcon(ButtonPanelObject.getUserMoveImg());
-                else if(((row>= 0 && row <= 16) && (col + 4 >= 0 && col + 4 <= 16)))
-                    if(quoridorButtons[row][col + 4].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                else if (((row >= 0 && row <= 16) && (col + 4 >= 0 && col + 4 <= 16)))
+                    if (quoridorButtons[row][col + 4].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                         quoridorButtons[row][col + 4].setIcon(ButtonPanelObject.getUserMoveImg());
             }
 
@@ -238,34 +232,34 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
 
             // 흑색 돌 차례때 이동할 수 있는 마크 제거
             if ((row - 2 >= 0 && row - 2 <= 16) && (col >= 0 && col <= 16)) {
-                if(quoridorButtons[row - 2][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                if (quoridorButtons[row - 2][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                     quoridorButtons[row - 2][col].setIcon(ButtonPanelObject.getUserMoveImg());
-                else if(((row - 4 >= 0 && row - 4 <= 16) && (col >= 0 && col <= 16)))
-                    if(quoridorButtons[row - 4][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                else if (((row - 4 >= 0 && row - 4 <= 16) && (col >= 0 && col <= 16)))
+                    if (quoridorButtons[row - 4][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                         quoridorButtons[row - 4][col].setIcon(ButtonPanelObject.getUserMoveImg());
             }
 
             if ((row + 2 >= 0 && row + 2 <= 16) && (col >= 0 && col <= 16)) {
-                if(quoridorButtons[row + 2][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                if (quoridorButtons[row + 2][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                     quoridorButtons[row + 2][col].setIcon(ButtonPanelObject.getUserMoveImg());
-                else if(((row + 4 >= 0 && row + 4 <= 16) && (col >= 0 && col <= 16)))
-                    if(quoridorButtons[row + 4][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                else if (((row + 4 >= 0 && row + 4 <= 16) && (col >= 0 && col <= 16)))
+                    if (quoridorButtons[row + 4][col].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                         quoridorButtons[row + 4][col].setIcon(ButtonPanelObject.getUserMoveImg());
             }
 
             if ((row >= 0 && row <= 16) && (col - 2 >= 0 && col - 2 <= 16)) {
-                if(quoridorButtons[row][col - 2].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                if (quoridorButtons[row][col - 2].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                     quoridorButtons[row][col - 2].setIcon(ButtonPanelObject.getUserMoveImg());
-                else if(((row>= 0 && row <= 16) && (col - 4 >= 0 && col - 4 <= 16)))
-                    if(quoridorButtons[row][col - 4].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                else if (((row >= 0 && row <= 16) && (col - 4 >= 0 && col - 4 <= 16)))
+                    if (quoridorButtons[row][col - 4].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                         quoridorButtons[row][col - 4].setIcon(ButtonPanelObject.getUserMoveImg());
             }
 
             if ((row >= 0 && row <= 16) && (col + 2 >= 0 && col + 2 <= 16)) {
-                if(quoridorButtons[row][col + 2].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                if (quoridorButtons[row][col + 2].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                     quoridorButtons[row][col + 2].setIcon(ButtonPanelObject.getUserMoveImg());
-                else if(((row>= 0 && row <= 16) && (col + 4 >= 0 && col + 4 <= 16)))
-                    if(quoridorButtons[row][col + 4].getIcon() == ButtonPanelObject.getUserCanMoveImg())
+                else if (((row >= 0 && row <= 16) && (col + 4 >= 0 && col + 4 <= 16)))
+                    if (quoridorButtons[row][col + 4].getIcon() == ButtonPanelObject.getUserCanMoveImg())
                         quoridorButtons[row][col + 4].setIcon(ButtonPanelObject.getUserMoveImg());
             }
         }
@@ -351,17 +345,18 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
 
 
             //현재 턴 말이 이동할 수 있는 mark 표시
-            if(gameEnd == false)
+            if (gameEnd == false)
                 canMoveMark();
         }
     }
+
     public void victoryCheck() {
         for (int i = 0; i < quoridorButtons[0].length; i += 2) {
-            if(quoridorButtons[0][i].getIcon() == ButtonPanelObject.getPlayer1LocationImg()) {
+            if (quoridorButtons[0][i].getIcon() == ButtonPanelObject.getPlayer1LocationImg()) {
                 VictoryWindow victoryWindow = new VictoryWindow(TextFieldObjects.getPlayerNames(), turn);
                 gameEnd = true;
                 break;
-            } else if(quoridorButtons [16][i].getIcon() == ButtonPanelObject.getPlayer2LocationImg()) {
+            } else if (quoridorButtons[16][i].getIcon() == ButtonPanelObject.getPlayer2LocationImg()) {
                 VictoryWindow victoryWindow = new VictoryWindow(TextFieldObjects.getPlayerNames(), turn);
                 gameEnd = true;
                 break;
@@ -380,3 +375,5 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
         return turn;
     }
 }
+
+

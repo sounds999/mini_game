@@ -5,6 +5,7 @@ import Games.GUI.QuoridorButtonPanel;
 import Games.GUI.QuoridorTextField;
 
 import javax.swing.*;
+import java.util.Stack;
 
 
 public class BarInstallLogic extends JFrame {
@@ -17,6 +18,8 @@ public class BarInstallLogic extends JFrame {
 
     private int[] barNumber = {10, 10}; // 0번에 백색돌 막대 수, 1번에 흑색 돌 막대 수 <- 다시 만든다면 백과 흑 따로 만들었을 듯 하다
     private String[][] barLocation; // bar가 설치되어 있으면 "bar", 없으면 ""
+    private int[][] currentPlayerCoodinate; // 현재 말들의 좌표 <- 이런 식으로 다른 객체의 변수를 가져와서 저장하는 방식의 코딩은 좋은 방식은 아닌 것 같다
+                                            // 차라리 객체를 가져와서 객체의 getter을 사용해서 변수에 접근하는 것이 더 좋은 코드 작성법이라고 생각한다 (관리할 변수가 느니까)
 
     // 사용 객체들
     private JTextField[] userTextFields; // 0번에 topTextField(검은말), 1번에 bottomTextField(흰말)
@@ -26,12 +29,13 @@ public class BarInstallLogic extends JFrame {
 
     // 생성자
     public BarInstallLogic(QuoridorButtonPanel ButtonPanelObject,
-                           JButton[][] quoridorButtons, QuoridorTextField TextFieldObject, String[][] barLocation) {
+                           JButton[][] quoridorButtons, QuoridorTextField TextFieldObject, String[][] barLocation, int[][] currentPlayerCoordinate) {
         this.ButtonPanelObject = ButtonPanelObject;
         this.quoridorButtons = quoridorButtons;
         this.userTextFields = TextFieldObject.getUserTextFields();
         this.playerName = TextFieldObject.getPlayerNames();
         this.barLocation = barLocation;
+        this.currentPlayerCoodinate = currentPlayerCoordinate;
     }
 
     // 실시간 막대 설치 버튼 누른 좌표
@@ -81,7 +85,9 @@ public class BarInstallLogic extends JFrame {
                 if ((turn == i) && (barNumber[i] > 0)) {
 
                     // TODO 만약 해당 bar가 유저의 경로를 차단하지 않는 경우에 if문이 true가 되어서 barinstall이 실행되게 하는 로직 구현
-                    barinstall(turn, barDirectionSelectWindow, playerMoveLogicObject);
+                    if(!pasthBlocking()) { // 바를 두면 경로가 차단되는지 확인한다
+                        barinstall(turn, barDirectionSelectWindow, playerMoveLogicObject);
+                    }
 
                 } else if ((turn == i) && (barNumber[i] <= 0)) {
                     barDirectionSelectWindow.getWarning().setText("막대를 모두 사용하셨습니다");
@@ -89,6 +95,56 @@ public class BarInstallLogic extends JFrame {
             }
         }
     }
+
+    // 해당 위치에 bar을 두면 말 경로가 차단되는지 유무 검사
+    private boolean pasthBlocking() {
+        int[] whitePiecesCoordinate = currentPlayerCoodinate[0]; // 흰 말 현재좌표
+        int[] blackPiecesCoordinate = currentPlayerCoodinate[1]; // 검 말 현재좌표
+
+        String[][] whiteQuridor = deepCopy(barLocation);
+        String[][] blackQuridor = deepCopy(barLocation);
+
+        // button 기준으로 작성한 좌표를 String기준으로 변경함
+        for (int i = 0; i < whitePiecesCoordinate.length ; i++) {
+            whitePiecesCoordinate[i] += 1;
+            blackPiecesCoordinate[i] += 1;
+        }
+
+        whitePathBlocking(whiteQuridor, whitePiecesCoordinate);
+        blackPathBlocking(blackQuridor, blackPiecesCoordinate);
+
+        return false;
+    }
+
+    // 2차원 String 배열을 딥카피 한다
+    private String[][] deepCopy(String[][] barLocation) {
+        String[][] temArr = new String[barLocation.length][barLocation[0].length];
+
+        for (int i = 0; i < temArr.length; i++) {
+            temArr[i] = barLocation[i].clone();
+        }
+        return temArr;
+    }
+
+    // 흰색 돌 경로 체크하고 이후에 흰색 돌 체크랑 검은색 돌 체크 method를 함칠 수 있는 방법 고안 (체크해야 하는 줄을 매개변수로 건네주기)
+    // 흰색 돌 경로 체크
+    private boolean whitePathBlocking(String[][] Quridor, int[] currentCoordinate) {
+        Stack<int[]> stack = new Stack<int[]>();
+        stack.add(currentCoordinate);
+
+
+        return false;
+    }
+
+    // 검은 돌 경로 체크
+    private boolean blackPathBlocking(String[][] Quridor, int[] currentCoordinate) {
+        Stack<int[]> stack = new Stack<int[]>();
+        stack.add(currentCoordinate);
+
+
+        return false;
+    }
+
 
     // 바 설치
     //turn 값이 0이면 백색 턴, 1이면 흑색
