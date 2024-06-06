@@ -72,7 +72,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
                 quoridorButtons[i][j].addActionListener(this); // eventHandler을 갖고 있는 eventListener 건네줌
             }
         }
-        // 시작 시점 말 좌표
+        // 시작 시점 말 좌표 (버튼 배열 기준 설정)
         currentPlayerCoordinate[0][0] = 16;
         currentPlayerCoordinate[0][1] = 8;
         currentPlayerCoordinate[1][0] = 0;
@@ -301,7 +301,7 @@ public class PlayerMoveLogic extends JFrame implements ActionListener {
                 break;
         }
 
-        // 막대를 설치하는 메서드 (Event Handler)
+        // 막대를 설치하는 로직으로 통하는 메서드 (Event Handler)
         // BarInstallLogic으로 스레드가 가는 영역(BarInstallLogic으로 갔다가 BarDirectionSlectWindow로 이동)
         if (row % 2 == 1 && col % 2 == 1 && !gameEnd && (quoridorButtons[row][col].getIcon() == ButtonPanelObject.getBarCanPutImg())) {
             // bar설치
