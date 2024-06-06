@@ -88,9 +88,10 @@ public class BarInstallLogic extends JFrame {
                     // TODO 만약 해당 bar가 유저의 경로를 차단하지 않는 경우에 if문이 true가 되어서 barinstall이 실행되게 하는 로직 구현
                     if (!pasthBlocking()) { // 바를 두면 경로가 차단되는지 확인한다
                         barinstall(turn, barDirectionSelectWindow, playerMoveLogicObject);
-                    } else if(pasthBlocking()) {
+                    } else
                         barDirectionSelectWindow.getWarning().setText("경로가 차단됩니다");
-                    }
+
+
                 } else if ((turn == i) && (barNumber[i] <= 0)) {
                     barDirectionSelectWindow.getWarning().setText("막대를 모두 사용하셨습니다");
                 }
@@ -112,10 +113,13 @@ public class BarInstallLogic extends JFrame {
             blackPiecesCoordinate[i] += 1;
         }
 
-        pathBlockingCheck(whiteQuridor, whitePiecesCoordinate, 1); // 흰 색 말 체크
-        pathBlockingCheck(blackQuridor, blackPiecesCoordinate, 17); // 검은 말 체크
+        boolean check1 = pathBlockingCheck(whiteQuridor, whitePiecesCoordinate, ButtonPanelObject.getPlayer2LocationImg(), 1); // 흰 색 말 체크
+        boolean check2 = pathBlockingCheck(blackQuridor, blackPiecesCoordinate, ButtonPanelObject.getPlayer1LocationImg(), 17); // 검은 말 체크
 
-        return false;
+        if((check1 == false) && (check2 == false))
+            return false;
+        else
+            return true;
     }
 
     // 2차원 String 배열을 딥카피 한다
@@ -129,10 +133,9 @@ public class BarInstallLogic extends JFrame {
     }
 
     // stack 사용해서 경로 체크
-    private boolean pathBlockingCheck(String[][] whiteQuridor, int[] startCoordinate, int checkRow) {
-        Stack<int[]> stack = new Stack<int[]>(); // 이동시에 현재 위치 좌표 넣어둔다
-        whiteQuridor[startCoordinate[0]][startCoordinate[1]] = "(방문)";
-        stack.add(startCoordinate);
+    private boolean pathBlockingCheck(String[][] Quridor, int[] startCoordinate, Icon competitor, int checkRow) {
+        Stack<int[]> stack = new Stack<>(); // 이동시에 현재 위치 좌표 넣어둔다
+        Quridor[startCoordinate[0]][startCoordinate[1]] = "(방문)";
 
         int[] currentCoordinate = startCoordinate.clone();
         int currentX = 0;
@@ -151,15 +154,15 @@ public class BarInstallLogic extends JFrame {
             if ((rangeCheck(currentX - 2, currentY)) && (!barInstallCheck(currentX - 1, currentY))) {
                 // icon비교는 버튼 배열에서 확인해야 한다 버튼 배열은 string 배열보다 테두리가 한 줄 적기에 string기준으로 x,y에 -1씩 해주어야 한다
                 if (quoridorButtons[currentX - 3][currentY - 1].getIcon() == ButtonPanelObject.getUserMoveImg() && !visitedChecik(currentX - 2, currentY)) {
-                    whiteQuridor[currentX - 2][currentY] = "(방문)";
+                    Quridor[currentX - 2][currentY] = "(방문)";
                     stack.add(currentCoordinate.clone()); // add하는 이유는 이전 위치를 기억하기 위해서이다
                     // clone으로 넣는 이유는 deepCopy를 하기 위해서이다
                     currentCoordinate[0] = currentX - 2;
                     currentCoordinate[1] = currentY;
                     continue;
-                } else if (quoridorButtons[currentX - 3][currentY - 1].getIcon() == ButtonPanelObject.getPlayer2LocationImg()) {
+                } else if (quoridorButtons[currentX - 3][currentY - 1].getIcon() == competitor) {
                     if (rangeCheck(currentX - 4, currentY) && !barInstallCheck(currentX - 3, currentY) && !visitedChecik(currentX - 4, currentY)) {
-                        whiteQuridor[currentX - 4][currentY] = "(방문)";
+                        Quridor[currentX - 4][currentY] = "(방문)";
                         stack.add(currentCoordinate.clone()); // add하는 이유는 이전 위치를 기억하기 위해서이다
 
                         // clone으로 넣는 이유는 deepCopy를 하기 위해서이다
@@ -175,15 +178,15 @@ public class BarInstallLogic extends JFrame {
             if ((rangeCheck(currentX, currentY + 2)) && (!barInstallCheck(currentX, currentY + 1))) {
                 // icon비교는 버튼 배열에서 확인해야 한다 버튼 배열은 string 배열보다 테두리가 한 줄 적기에 string기준으로 x,y에 -1씩 해주어야 한다
                 if (quoridorButtons[currentX - 1][currentY + 1].getIcon() == ButtonPanelObject.getUserMoveImg() && !visitedChecik(currentX, currentY + 2)) {
-                    whiteQuridor[currentX][currentY + 2] = "(방문)";
+                    Quridor[currentX][currentY + 2] = "(방문)";
                     stack.add(currentCoordinate.clone()); // add하는 이유는 이전 위치를 기억하기 위해서이다
                     // clone으로 넣는 이유는 deepCopy를 하기 위해서이다
                     currentCoordinate[0] = currentX;
                     currentCoordinate[1] = currentY + 2;
                     continue;
-                } else if (quoridorButtons[currentX - 1][currentY + 1].getIcon() == ButtonPanelObject.getPlayer2LocationImg()) {
+                } else if (quoridorButtons[currentX - 1][currentY + 1].getIcon() == competitor) {
                     if (rangeCheck(currentX, currentY + 4) && !barInstallCheck(currentX, currentY + 3) && !visitedChecik(currentX, currentY + 4)) {
-                        whiteQuridor[currentX - 4][currentY] = "(방문)";
+                        Quridor[currentX - 4][currentY] = "(방문)";
                         stack.add(currentCoordinate.clone()); // add하는 이유는 이전 위치를 기억하기 위해서이다
 
                         // clone으로 넣는 이유는 deepCopy를 하기 위해서이다
@@ -199,15 +202,15 @@ public class BarInstallLogic extends JFrame {
             if ((rangeCheck(currentX + 2, currentY)) && (!barInstallCheck(currentX + 1, currentY))) {
                 // icon비교는 버튼 배열에서 확인해야 한다 버튼 배열은 string 배열보다 테두리가 한 줄 적기에 string기준으로 x,y에 -1씩 해주어야 한다
                 if (quoridorButtons[currentX + 1][currentY - 1].getIcon() == ButtonPanelObject.getUserMoveImg() && !visitedChecik(currentX + 2, currentY)) {
-                    whiteQuridor[currentX + 2][currentY] = "(방문)";
+                    Quridor[currentX + 2][currentY] = "(방문)";
                     stack.add(currentCoordinate.clone()); // add하는 이유는 이전 위치를 기억하기 위해서이다
                     // clone으로 넣는 이유는 deepCopy를 하기 위해서이다
                     currentCoordinate[0] = currentX + 2;
                     currentCoordinate[1] = currentY;
                     continue;
-                } else if (quoridorButtons[currentX + 1][currentY - 1].getIcon() == ButtonPanelObject.getPlayer2LocationImg()) {
+                } else if (quoridorButtons[currentX + 1][currentY - 1].getIcon() == competitor) {
                     if (rangeCheck(currentX + 4, currentY) && !barInstallCheck(currentX + 3, currentY) && !visitedChecik(currentX + 4, currentY)) {
-                        whiteQuridor[currentX + 4][currentY] = "(방문)";
+                        Quridor[currentX + 4][currentY] = "(방문)";
                         stack.add(currentCoordinate.clone()); // add하는 이유는 이전 위치를 기억하기 위해서이다
 
                         // clone으로 넣는 이유는 deepCopy를 하기 위해서이다
@@ -223,15 +226,15 @@ public class BarInstallLogic extends JFrame {
             if ((rangeCheck(currentX, currentY - 2)) && (!barInstallCheck(currentX, currentY - 1))) {
                 // icon비교는 버튼 배열에서 확인해야 한다 버튼 배열은 string 배열보다 테두리가 한 줄 적기에 string기준으로 x,y에 -1씩 해주어야 한다
                 if (quoridorButtons[currentX - 1][currentY - 3].getIcon() == ButtonPanelObject.getUserMoveImg() && !visitedChecik(currentX, currentY - 2)) {
-                    whiteQuridor[currentX][currentY - 2] = "(방문)";
+                    Quridor[currentX][currentY - 2] = "(방문)";
                     stack.add(currentCoordinate.clone()); // add하는 이유는 이전 위치를 기억하기 위해서이다
                     // clone으로 넣는 이유는 deepCopy를 하기 위해서이다
                     currentCoordinate[0] = currentX;
                     currentCoordinate[1] = currentY - 2;
                     continue;
-                } else if (quoridorButtons[currentX - 1][currentY + 1].getIcon() == ButtonPanelObject.getPlayer2LocationImg()) {
+                } else if (quoridorButtons[currentX - 1][currentY + 1].getIcon() == competitor) {
                     if (rangeCheck(currentX, currentY - 4) && !barInstallCheck(currentX, currentY - 3) && !visitedChecik(currentX, currentY - 4)) {
-                        whiteQuridor[currentX][currentY - 4] = "(방문)";
+                        Quridor[currentX][currentY - 4] = "(방문)";
                         stack.add(currentCoordinate.clone()); // add하는 이유는 이전 위치를 기억하기 위해서이다
 
                         // clone으로 넣는 이유는 deepCopy를 하기 위해서이다
