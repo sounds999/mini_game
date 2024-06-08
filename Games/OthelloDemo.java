@@ -28,7 +28,7 @@ public class OthelloDemo extends JFrame implements ActionListener {
 	public OthelloDemo(String[] player) {
 		this.player = player;
 		
-		setTitle("Othello Test");
+		setTitle("Othello");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(590, 680);
 		setLayout(new GridLayout(9, 1));

@@ -12,7 +12,7 @@ public class BarDirectionSelectWindow extends JFrame {
 
 
     public BarDirectionSelectWindow() {
-        setBounds(225,250,210,300);
+        setBounds(210,200,228,300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // 창 삭제해도 메인 창은 안 꺼짐
         setLayout(null); // 세밀하게 좌표 제어
         setVisible(true);
@@ -40,16 +40,18 @@ public class BarDirectionSelectWindow extends JFrame {
     public void componentPosition() {
         DirectionSelectMsg.setBounds(0,0,210,50);
         DirectionSelectMsg.setHorizontalAlignment(SwingConstants.CENTER);
+
         add(DirectionSelectMsg);
 
-        Directions[0] = getJRadioButton("가로",30,50, 50,50);
-        Directions[1] = getJRadioButton("세로",105,50,50,50);
+        Directions[0] = getJRadioButton("가로",30,50, 70,50);
+        Directions[1] = getJRadioButton("세로",125,50,70,50);
 
-        checkCancelButtons[0] = getButton("확인", 15, 120, 80, 80);
-        checkCancelButtons[1] = getButton("취소", 105, 120, 80, 80);
+        checkCancelButtons[0] = getButton("확인", 15, 110, 80, 80);
+        checkCancelButtons[1] = getButton("취소", 115, 110, 80, 80);
 
-        warning.setBounds(0,200,210,100);
+        warning.setBounds(0,200,210,50);
         warning.setBackground(Color.RED);
+        warning.setHorizontalAlignment(SwingConstants.CENTER);
         add(warning);
     }
 

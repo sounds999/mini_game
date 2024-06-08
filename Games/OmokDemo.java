@@ -28,7 +28,7 @@ public class OmokDemo extends JFrame implements ActionListener {
 	public OmokDemo(String[] player) {
 		this.player = player;
 		
-		setTitle("Omok Test");
+		setTitle("Omok");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(800, 900);
 		setLayout(new GridLayout(16, 1));
@@ -100,22 +100,21 @@ public class OmokDemo extends JFrame implements ActionListener {
 				if (row != -1 && col != -1)
 					break;
 			}
-//			if (turn == 0 && !black33(row, col, board)) { // 흑돌일 경우 33인지 확인
-			if (turn == 0) { // 흑돌일 경우 33인지 확인
-				board[row][col] = stone[turn]; // 좌표에 오목알 위치
-				btn.setIcon(stoneImg[turn]); // 좌표에 오목알 위치(display)
-				
-				if (!complete(row, col, board)) {
-					msgField.setText(player[(turn == 0) ? 1 : 0] + "[" + stone[(turn == 0) ? 1 : 0] + "]님의 순서입니다. 오목알을 옮겨주세요.");
-					turn = (turn == 0) ? 1 : 0;
+			if (turn == 0) {
+				if (black33(row, col, stone[turn])) { // 흑돌일 경우 33인지 확인
+					msgField.setText("※흑돌 33불가※ " + player[turn] + "[" + stone[turn] + "]님, 해당 위치에는 오목알을 놓을 수 없습니다.");
 				} else {
-					msgField.setText(winnerPrint(player, stone, turn));
-					continueGame = false;
+					board[row][col] = stone[turn]; // 좌표에 오목알 위치
+					btn.setIcon(stoneImg[turn]); // 좌표에 오목알 위치(display)
+					
+					if (!complete(row, col, board)) {
+						msgField.setText(player[(turn == 0) ? 1 : 0] + "[" + stone[(turn == 0) ? 1 : 0] + "]님의 순서입니다. 오목알을 옮겨주세요.");
+						turn = (turn == 0) ? 1 : 0;
+					} else {
+						msgField.setText(winnerPrint(player, stone, turn));
+						continueGame = false;
+					}
 				}
-				
-//			} else if (turn == 0 && black33(row, col, board)) {
-//				msgField.setText("※흑돌 33불가※ " + player[turn] + "[" + stone[turn] + "]님, 해당 위치에는 오목알을 놓을 수 없습니다.");
-				
 			} else if (turn == 1) {
 				board[row][col] = stone[turn]; // 좌표에 오목알 위치
 				btn.setIcon(stoneImg[turn]); // 좌표에 오목알 위치(display)
@@ -133,7 +132,62 @@ public class OmokDemo extends JFrame implements ActionListener {
 		}
 
 	}
+	
+	// 흑돌 33 확인
+	public boolean black33(int row, int col, String stone) {
+        if (!board[row][col].isEmpty()) {
+            return false;
+        }
+        
+        board[row][col] = stone;
+        int countThree = 0; // 열린 삼의 개수
 
+        for (int dx = -1; dx <= 1; dx++) { // 좌우
+            for (int dy = -1; dy <= 1; dy++) { // 상하
+                if (dx == 0 && dy == 0) {
+                    continue; // 본인 방향은 제외
+                }
+                if (checkOpen(row, col, dx, dy, stone)) {
+                    countThree++;
+                }
+            }
+        }
+        board[row][col] = "";
+
+        return countThree >= 3;
+    }
+	// 흑돌 33 확인2
+	private boolean checkOpen(int row, int col, int dx, int dy, String stone) {
+        int count = 1; // 현재 돌을 포함하여 연속된 돌의 개수
+        boolean leftEnds = false; // 왼쪽 끝이 비어있는지 여부
+        boolean rightEnds = false; // 오른쪽 끝이 비어있는지 여부
+
+        int nx = row + dx;
+        int ny = col + dy;
+        
+        while (nx >= 0 && nx < 15 && ny >= 0 && ny < 15 && board[nx][ny].equals(stone)) {
+            count++;
+            nx += dx;
+            ny += dy;
+        }
+        if (nx >= 0 && nx < 15 && ny >= 0 && ny < 15 && board[nx][ny].isEmpty()) {
+        	rightEnds = true;
+        }
+
+        nx = row - dx;
+        ny = col - dy;
+        while (nx >= 0 && nx < 15 && ny >= 0 && ny < 15 && board[nx][ny].equals(stone)) {
+            count++;
+            nx -= dx;
+            ny -= dy;
+        }
+        if (nx >= 0 && nx < 15 && ny >= 0 && ny < 15 && board[nx][ny].isEmpty()) {
+        	leftEnds = true;
+        }
+        
+        return count == 3 && leftEnds && rightEnds;
+    }
+	
 	// 오목 완성 확인
 	public static boolean complete(int row, int col, String[][] board) {
 		if ((seroComplete(row, col, board)) || (garoComplete(row, col, board)) 
